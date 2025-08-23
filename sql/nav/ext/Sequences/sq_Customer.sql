@@ -1,0 +1,5 @@
+CREATE SEQUENCE [ext].[sq_Customer]
+    AS INT
+    INCREMENT BY 1
+    MINVALUE 0;
+GO
