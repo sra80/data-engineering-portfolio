@@ -5,8 +5,8 @@ Content is organized by technology area to make review and navigation straightfo
 
 ## structure
 ```
-sql/       # database objects & migrations (add your scripts)
-python/    # libraries, utilities, notebooks (add your code)
-azure/     # data factory / logic apps / infra templates (add your IaC)
+sql/       # database objects & migrations
+python/    # libraries, utilities, notebooks
+azure/     # data factory / logic apps / infra templates
 ops/       # ci/cd workflows and helper scripts
 ```
