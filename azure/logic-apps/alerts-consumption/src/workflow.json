@@ -1,0 +1,1064 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "Recurrence": {
+        "type": "Recurrence",
+        "recurrence": {
+          "frequency": "Minute",
+          "interval": 1
+        },
+        "runtimeConfiguration": {
+          "concurrency": {
+            "runs": 1
+          }
+        }
+      }
+    },
+    "actions": {
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_schedule]": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "logic_app_identifier": "@variables('logic_app_identifier')",
+            "place_holder_session": "@variables('place_holder_session')"
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_email_notifications_schedule]'))}"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_process_model_delay_register]": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_schedule_timeout]": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "logic_app_identifier": "@variables('logic_app_identifier')"
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_email_notifications_schedule_timeout]'))}"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_schedule]": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_team_notification_channels]": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "json": "@{body('List_channels_Business_Intelligence_Alerts')}"
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_team_notification_channels]'))}"
+        },
+        "runAfter": {
+          "List_channels_Business_Intelligence_Alerts": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_team_notification_log]": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {},
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_team_notification_log]'))}"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_schedule]": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_db_sys.sp_email_notifications_schedule_error_handl": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "error_message": "@{body('Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_schedule]')}",
+            "logic_app_identifier": "@variables('logic_app_identifier')",
+            "place_holder_session": "@variables('place_holder_session')"
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_email_notifications_schedule_error_handling]'))}"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_schedule]": [
+            "Failed"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_db_sys.sp_tasks_overdue": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "logicApp_ID": "@variables('logic_app_identifier')",
+            "next_process_offset_min": 5,
+            "place_holder_session": "@variables('place_holder_session')",
+            "procedureName": "db_sys.sp_tasks_overdue",
+            "report_error_every": 3
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_auditLog_procedure]'))}"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_sessions]_(start)": [
+            "Succeeded"
+          ]
+        }
+      },
+      "For_each_2": {
+        "type": "Foreach",
+        "foreach": "@body('Get_rows_(V2)_db_sys.vw_team_notification_list')?['value']",
+        "actions": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_team_notification_log_posted]": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": {
+                  "name": "@parameters('$connections')['sql-1']['connectionId']"
+                }
+              },
+              "method": "post",
+              "body": {
+                "place_holder_session": "@variables('place_holder_session')",
+                "teams_message_id": "@variables('message_id')",
+                "tnc_ID": "@items('For_each_2')?['tnc_ID']",
+                "tnl_ID": "@items('For_each_2')?['tnl_ID']"
+              },
+              "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_team_notification_log_posted]'))}"
+            },
+            "runAfter": {
+              "Condition_is_reply": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Condition_is_reply": {
+            "type": "If",
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@item()?['is_reply']",
+                    1
+                  ]
+                }
+              ]
+            },
+            "actions": {
+              "Reply_with_a_message_in_a_channel": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['teams_1']['connectionId']"
+                    }
+                  },
+                  "method": "post",
+                  "body": {
+                    "parentMessageId": "@{item()?['teams_message_id']}",
+                    "recipient": {
+                      "groupId": "1d9e1fcc-4f4a-4507-97db-966187612e02",
+                      "channelId": "@item()?['channel_id']"
+                    },
+                    "messageBody": "<p class=\"editor-paragraph\">@{variables('message_body')}</p>"
+                  },
+                  "path": "/v1.0/teams/conversation/replyWithMessage/poster/@{encodeURIComponent('User')}/location/@{encodeURIComponent('Channel')}"
+                }
+              },
+              "Set_variable_message_id_1": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "message_id",
+                  "value": "@body('Reply_with_a_message_in_a_channel')?['id']"
+                },
+                "runAfter": {
+                  "Reply_with_a_message_in_a_channel": [
+                    "Succeeded"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "actions": {
+                "Post_message_in_a_chat_or_channel_2": {
+                  "type": "ApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connection": {
+                        "name": "@parameters('$connections')['teams_1']['connectionId']"
+                      }
+                    },
+                    "method": "post",
+                    "body": {
+                      "recipient": {
+                        "groupId": "1d9e1fcc-4f4a-4507-97db-966187612e02",
+                        "channelId": "@items('For_each_2')?['channel_id']"
+                      },
+                      "messageBody": "<p class=\"editor-paragraph\">@{variables('message_body')}</p>",
+                      "subject": "@items('For_each_2')?['message_subject']"
+                    },
+                    "path": "/beta/teams/conversation/message/poster/@{encodeURIComponent('User')}/location/@{encodeURIComponent('Channel')}"
+                  }
+                },
+                "Set_variable_message_id_2": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "message_id",
+                    "value": "@body('Post_message_in_a_chat_or_channel_2')?['id']"
+                  },
+                  "runAfter": {
+                    "Post_message_in_a_chat_or_channel_2": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              }
+            },
+            "runAfter": {
+              "Condition": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Condition": {
+            "type": "If",
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@item()?['message_size_exceeded']",
+                    1
+                  ]
+                }
+              ]
+            },
+            "actions": {
+              "Create_file": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['sharepointonline-1']['connectionId']"
+                    }
+                  },
+                  "method": "post",
+                  "body": "@item()?['message_body']",
+                  "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://example.com/sites/BusinessIntelligenceAlerts'))}/files",
+                  "queries": {
+                    "folderPath": "@item()?['sharepoint_location']",
+                    "name": "@item()?['file_name']",
+                    "queryParametersSingleEncoded": true
+                  }
+                },
+                "runtimeConfiguration": {
+                  "contentTransfer": {
+                    "transferMode": "Chunked"
+                  }
+                }
+              },
+              "Set_variable_message_body_url": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "message_body",
+                  "value": "@item()?['sharepoint_url']"
+                },
+                "runAfter": {
+                  "Create_file": [
+                    "Succeeded"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "actions": {
+                "Set_variable_message_body": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "message_body",
+                    "value": "@item()?['message_body']"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "runAfter": {
+          "Initialize_variable_message_id": [
+            "Succeeded"
+          ]
+        },
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 1
+          }
+        }
+      },
+      "For_each_db_sys.vw_email_notifications": {
+        "type": "Foreach",
+        "foreach": "@body('Get_rows_(V2)_db_sys.vw_email_notifications')?['value']",
+        "actions": {
+          "Condition_bi_core_is_true": {
+            "type": "If",
+            "expression": {
+              "or": [
+                {
+                  "equals": [
+                    "@variables('bi_core')",
+                    1
+                  ]
+                }
+              ]
+            },
+            "actions": {
+              "Post_message_in_a_chat_or_channel_to_BI_Core": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['teams_1']['connectionId']"
+                    }
+                  },
+                  "method": "post",
+                  "body": {
+                    "recipient": "19:5fb37ee431724a6bb8b23546cc0447e1@thread.v2",
+                    "messageBody": "<p>@{variables('email_body')}</p>"
+                  },
+                  "path": "/beta/teams/conversation/message/poster/@{encodeURIComponent('User')}/location/@{encodeURIComponent('Group chat')}"
+                }
+              }
+            },
+            "else": {
+              "actions": {}
+            },
+            "runAfter": {
+              "Set_variable_add_email_count": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Condition_email_address_count_more_than_0": {
+            "type": "If",
+            "expression": {
+              "and": [
+                {
+                  "greater": [
+                    "@variables('email_add_count')",
+                    0
+                  ]
+                }
+              ]
+            },
+            "actions": {
+              "Send_an_email_(V2)": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['office365']['connectionId']"
+                    }
+                  },
+                  "method": "post",
+                  "body": {
+                    "To": "@variables('email_to')",
+                    "Subject": "@variables('email_subject')",
+                    "Body": "<p>@{variables('email_body')}</p>",
+                    "Cc": "@variables('email_cc')",
+                    "Importance": "@variables('email_importance')"
+                  },
+                  "path": "/v2/Mail"
+                }
+              }
+            },
+            "else": {
+              "actions": {}
+            },
+            "runAfter": {
+              "Set_variable_add_email_count": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_sentTS]": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": {
+                  "name": "@parameters('$connections')['sql-1']['connectionId']"
+                }
+              },
+              "method": "post",
+              "body": {
+                "ID": "@variables('ID')"
+              },
+              "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_email_sentTS]'))}"
+            },
+            "runAfter": {
+              "Condition_bi_core_is_true": [
+                "Succeeded"
+              ],
+              "Condition_email_address_count_more_than_0": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_ID": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "ID",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['ID']"
+            }
+          },
+          "Set_variable_add_email_count": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_add_count",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['email_count']"
+            },
+            "runAfter": {
+              "Set_variable_bi_core": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_bi_core": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "bi_core",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['bi_core']"
+            },
+            "runAfter": {
+              "Set_variable_email_importance": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_email_body": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_body",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['email_body']"
+            },
+            "runAfter": {
+              "Set_variable_email_subject": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_email_cc": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_cc",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['email_cc']"
+            },
+            "runAfter": {
+              "Set_variable_email_to": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_email_importance": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_importance",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['email_importance']"
+            },
+            "runAfter": {
+              "Set_variable_email_body": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_email_subject": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_subject",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['email_subject']"
+            },
+            "runAfter": {
+              "Set_variable_email_cc": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_email_to": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_to",
+              "value": "@items('For_each_db_sys.vw_email_notifications')?['email_to']"
+            },
+            "runAfter": {
+              "Set_variable_ID": [
+                "Succeeded"
+              ]
+            }
+          }
+        },
+        "runAfter": {
+          "Get_rows_(V2)_db_sys.vw_email_notifications": [
+            "Succeeded"
+          ]
+        },
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 1
+          }
+        }
+      },
+      "For_each_db_sys.vw_procedure_schedule_errorLog": {
+        "type": "Foreach",
+        "foreach": "@body('Get_rows_(V2)_db_sys.vw_procedure_schedule_errorLog')?['value']",
+        "actions": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_procedure_schedule_errorLog]": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": {
+                  "name": "@parameters('$connections')['sql-1']['connectionId']"
+                }
+              },
+              "method": "post",
+              "body": {
+                "ID": "@variables('ID')"
+              },
+              "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_procedure_schedule_errorLog]'))}"
+            },
+            "runAfter": {
+              "Post_message_in_a_chat_or_channel": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Post_message_in_a_chat_or_channel": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": {
+                  "name": "@parameters('$connections')['teams']['connectionId']"
+                }
+              },
+              "method": "post",
+              "body": {
+                "recipient": {
+                  "groupId": "1d9e1fcc-4f4a-4507-97db-966187612e02",
+                  "channelId": "19:ff1c47080d0e4e099c8ee4887c640af9@thread.tacv2"
+                },
+                "messageBody": "<p>@{variables('email_body')}</p>",
+                "subject": "@variables('email_subject')"
+              },
+              "path": "/beta/teams/conversation/message/poster/@{encodeURIComponent('User')}/location/@{encodeURIComponent('Channel')}"
+            },
+            "runAfter": {
+              "Set_variable_e-mail_body_for_errors": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_ID_for_errors": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "ID",
+              "value": "@items('For_each_db_sys.vw_procedure_schedule_errorLog')?['ID']"
+            }
+          },
+          "Set_variable_e-mail_body_for_errors": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_body",
+              "value": "@items('For_each_db_sys.vw_procedure_schedule_errorLog')?['alert_body']"
+            },
+            "runAfter": {
+              "Set_variable_email_subject_for_errors": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Set_variable_email_subject_for_errors": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "email_subject",
+              "value": "@items('For_each_db_sys.vw_procedure_schedule_errorLog')?['alert_subject']"
+            },
+            "runAfter": {
+              "Set_variable_ID_for_errors": [
+                "Succeeded"
+              ]
+            }
+          }
+        },
+        "runAfter": {
+          "Get_rows_(V2)_db_sys.vw_procedure_schedule_errorLog": [
+            "Succeeded"
+          ]
+        },
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 1
+          }
+        }
+      },
+      "Get_rows_(V2)_db_sys.vw_email_notifications": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "get",
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/tables/@{encodeURIComponent(encodeURIComponent('[db_sys].[vw_email_notifications]'))}/items"
+        },
+        "runAfter": {
+          "Initialize_variable_email_add_count": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Get_rows_(V2)_db_sys.vw_procedure_schedule_errorLog": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "get",
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/tables/@{encodeURIComponent(encodeURIComponent('[db_sys].[vw_procedure_schedule_errorLog]'))}/items"
+        },
+        "runAfter": {
+          "For_each_db_sys.vw_email_notifications": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Get_rows_(V2)_db_sys.vw_team_notification_list": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "get",
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/tables/@{encodeURIComponent(encodeURIComponent('[db_sys].[vw_team_notification_list]'))}/items"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_team_notification_log]": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_ID": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "ID",
+              "type": "integer"
+            }
+          ]
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_schedule_timeout]": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_bi_core": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "bi_core",
+              "type": "integer",
+              "value": 0
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_email_importance": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_email_add_count": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "email_add_count",
+              "type": "integer",
+              "value": 0
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_bi_core": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_email_body": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "email_body",
+              "type": "string"
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_email_subject": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_email_cc": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "email_cc",
+              "type": "string"
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_email_to": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_email_importance": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "email_importance",
+              "type": "string"
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_email_body": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_email_subject": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "email_subject",
+              "type": "string"
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_email_cc": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_email_to": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "email_to",
+              "type": "string"
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_ID": [
+            "Succeeded"
+          ]
+        }
+      },
+      "List_channels_Business_Intelligence_Alerts": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['teams_1']['connectionId']"
+            }
+          },
+          "method": "get",
+          "path": "/beta/groups/@{encodeURIComponent('1d9e1fcc-4f4a-4507-97db-966187612e02')}/channels"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_sessions]_(start)": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_elasticjob_errorlog]": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {},
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_elasticjob_errorlog]'))}"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_sessions]_(start)": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_process_model_delay_register]": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "logicApp_ID": "@variables('logic_app_identifier')",
+            "next_process_offset_min": 5,
+            "place_holder_session": "@variables('place_holder_session')",
+            "procedureName": "db_sys.sp_process_model_delay_register"
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_auditLog_procedure]'))}"
+        },
+        "runAfter": {
+          "Execute_stored_procedure_(V2)_db_sys.sp_tasks_overdue": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_message_id": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "message_id",
+              "type": "string"
+            }
+          ]
+        },
+        "runAfter": {
+          "Get_rows_(V2)_db_sys.vw_team_notification_list": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Initialize_variable_place_holder_session": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "place_holder_session",
+              "type": "string",
+              "value": "@{guid()}"
+            }
+          ]
+        },
+        "runAfter": {}
+      },
+      "Initialize_variable_logic_app_identifier": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "logic_app_identifier",
+              "type": "string",
+              "value": "@{workflow()['run']['name']}"
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_place_holder_session": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_sessions]_(start)": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "logicApp_ID": "@variables('logic_app_identifier')",
+            "place_holder_session": "@variables('place_holder_session')"
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_email_notifications_sessions]'))}"
+        },
+        "runAfter": {
+          "Get_emails_(V3)": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Execute_stored_procedure_(V2)_[db_sys].[sp_email_notifications_sessions]_(end)": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['sql-1']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "place_holder_session": "@variables('place_holder_session')"
+          },
+          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('org-data-sql.database.windows.net'))},@{encodeURIComponent(encodeURIComponent('nav_prod_portfolio'))}/procedures/@{encodeURIComponent(encodeURIComponent('[db_sys].[sp_email_notifications_sessions]'))}"
+        },
+        "runAfter": {
+          "For_each_db_sys.vw_procedure_schedule_errorLog": [
+            "Succeeded",
+            "TimedOut",
+            "Skipped",
+            "Failed"
+          ],
+          "For_each_2": [
+            "Succeeded",
+            "TimedOut",
+            "Skipped",
+            "Failed"
+          ],
+          "Execute_stored_procedure_(V2)_db_sys.sp_email_notifications_schedule_error_handl": [
+            "Succeeded",
+            "TimedOut",
+            "Skipped",
+            "Failed"
+          ]
+        }
+      },
+      "Initialize_variable_message_body": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "message_body",
+              "type": "string"
+            }
+          ]
+        },
+        "runAfter": {
+          "Initialize_variable_logic_app_identifier": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Get_emails_(V3)": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['office365']['connectionId']"
+            }
+          },
+          "method": "get",
+          "path": "/v3/Mail",
+          "queries": {
+            "importance": "Any",
+            "fetchOnlyWithAttachment": false,
+            "folderPath": "Inbox",
+            "fetchOnlyUnread": false,
+            "fetchOnlyFlagged": false,
+            "includeAttachments": false
+          }
+        },
+        "runAfter": {
+          "Initialize_variable_message_body": [
+            "Succeeded"
+          ]
+        }
+      }
+    },
+    "outputs": {},
+    "parameters": {
+      "$connections": {
+        "type": "Object",
+        "defaultValue": {}
+      }
+    }
+  },
+  "parameters": {
+    "$connections": {
+      "type": "Object",
+      "value": {
+        "sql-1": {
+          "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/sql",
+          "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/sql-17",
+          "connectionName": "sql-17",
+          "connectionProperties": {
+            "authentication": {
+              "type": "ManagedServiceIdentity"
+            }
+          }
+        },
+        "teams_1": {
+          "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/teams",
+          "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/teams-1",
+          "connectionName": "teams-1"
+        },
+        "sharepointonline-1": {
+          "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/sharepointonline",
+          "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/sharepointonline-1",
+          "connectionName": "sharepointonline-1"
+        },
+        "office365": {
+          "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/office365",
+          "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/office365",
+          "connectionName": "office365"
+        },
+        "teams": {
+          "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/teams",
+          "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/teams",
+          "connectionName": "teams"
+        }
+      }
+    }
+  }
+}

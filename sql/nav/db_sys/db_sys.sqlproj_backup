@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7C7DCAB5-AFD8-4953-9F9A-423C5FD20652}</ProjectGuid>
+    <OutputType>Database</OutputType>
+    <RootNamespace>db_sys</RootNamespace>
+    <AssemblyName>db_sys</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultCollation>Latin1_General_CI_AS</DefaultCollation>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <DefaultFileStructure>BySchema</DefaultFileStructure>
+    <Name>db_sys</Name>
+    <DefaultSchema>dbo</DefaultSchema>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>db_sys.sql</BuildScriptName>
+    <TargetDatabaseName>db_sys</TargetDatabaseName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>db_sys.sql</BuildScriptName>
+    <TargetDatabaseName>db_sys</TargetDatabaseName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="ExternalTables\" />
+    <Folder Include="Functions\" />
+    <Folder Include="Sequences\" />
+    <Folder Include="StoredProcedures\" />
+    <Folder Include="Tables\" />
+    <Folder Include="UserDefinedTypes\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="ExternalTables\auditLog_BI.sql" />
+    <Build Include="ExternalTables\auditLog_logicApp_identifier.sql" />
+    <Build Include="ExternalTables\pre_model_monitor.sql" />
+    <Build Include="ExternalTables\procedure_schedule_BI.sql" />
+    <Build Include="Functions\fn_Company.sql" />
+    <Build Include="Functions\fn_Company_object.sql" />
+    <Build Include="Functions\fn_FK_depends.sql" />
+    <Build Include="Functions\fn_Lookup.sql" />
+    <Build Include="Functions\fn_auditLog_avgGapBetweenRunsSeconds.sql" />
+    <Build Include="Functions\fn_auditLog_info.sql" />
+    <Build Include="Functions\fn_bit_to_boolean.sql" />
+    <Build Include="Functions\fn_charindex.sql" />
+    <Build Include="Functions\fn_count_days_in_week.sql" />
+    <Build Include="Functions\fn_date_ret_null.sql" />
+    <Build Include="Functions\fn_date_thisTimeLastYear.sql" />
+    <Build Include="Functions\fn_dateadd.sql" />
+    <Build Include="Functions\fn_datediff_string.sql" />
+    <Build Include="Functions\fn_datefrom_year_week.sql" />
+    <Build Include="Functions\fn_datetime_combine.sql" />
+    <Build Include="Functions\fn_datetime_gmt_to_utc.sql" />
+    <Build Include="Functions\fn_datetime_portion.sql" />
+    <Build Include="Functions\fn_datetime_utc_to_cest.sql" />
+    <Build Include="Functions\fn_datetime_utc_to_eest.sql" />
+    <Build Include="Functions\fn_datetime_utc_to_est.sql" />
+    <Build Include="Functions\fn_datetime_utc_to_gmt.sql" />
+    <Build Include="Functions\fn_datetime_utc_to_mst.sql" />
+    <Build Include="Functions\fn_datetime_yyyyww.sql" />
+    <Build Include="Functions\fn_def_external_table.sql" />
+    <Build Include="Functions\fn_depends_column.sql" />
+    <Build Include="Functions\fn_divide.sql" />
+    <Build Include="Functions\fn_dow_ofMonth_ofWeek.sql" />
+    <Build Include="Functions\fn_email_isValid.sql" />
+    <Build Include="Functions\fn_email_notifications_add_clean.sql" />
+    <Build Include="Functions\fn_email_notifications_bi_core.sql" />
+    <Build Include="Functions\fn_email_notifications_schedule_trigger.sql" />
+    <Build Include="Functions\fn_email_split_internal_external.sql" />
+    <Build Include="Functions\fn_eoweek.sql" />
+    <Build Include="Functions\fn_getgmtdate.sql" />
+    <Build Include="Functions\fn_index_info_indexName.sql" />
+    <Build Include="Functions\fn_index_name.sql" />
+    <Build Include="Functions\fn_json_extract.sql" />
+    <Build Include="Functions\fn_match_string.sql" />
+    <Build Include="Functions\fn_match_string_scalar.sql" />
+    <Build Include="Functions\fn_minus_min0.sql" />
+    <Build Include="Functions\fn_model_partition_month.sql" />
+    <Build Include="Functions\fn_num_oridinal.sql" />
+    <Build Include="Functions\fn_object_definition.sql" />
+    <Build Include="Functions\fn_object_id.sql" />
+    <Build Include="Functions\fn_outcode.sql" />
+    <Build Include="Functions\fn_outcode_countrycode.sql" />
+    <Build Include="Functions\fn_poweek.sql" />
+    <Build Include="Functions\fn_procedure_version.sql" />
+    <Build Include="Functions\fn_process_model_partitions_check.sql" />
+    <Build Include="Functions\fn_process_model_script.sql" />
+    <Build Include="Functions\fn_replace_nonAlpaNumeric.sql" />
+    <Build Include="Functions\fn_round_by_sample.sql" />
+    <Build Include="Functions\fn_runTimeString.sql" />
+    <Build Include="Functions\fn_schema_name.sql" />
+    <Build Include="Functions\fn_schema_name_from_object_id.sql" />
+    <Build Include="Functions\fn_set_process_flag.sql" />
+    <Build Include="Functions\fn_set_process_next_due.sql" />
+    <Build Include="Functions\fn_table_definition.sql" />
+    <Build Include="Functions\fn_user_is_uniqueidentifier.sql" />
+    <Build Include="Functions\fomonth.sql" />
+    <Build Include="Functions\foweek.sql" />
+    <Build Include="Functions\static_year.sql" />
+    <Build Include="Functions\string_split.sql" />
+    <Build Include="Sequences\sq_nav_user_sessions.sql" />
+    <Build Include="StoredProcedures\recreate_missing_indexes.sql" />
+    <Build Include="StoredProcedures\sp_MSreplication_objects_collision.sql" />
+    <Build Include="StoredProcedures\sp_MSreplication_subscriptions_monitor.sql" />
+    <Build Include="StoredProcedures\sp_auditLog_cleanups.sql" />
+    <Build Include="StoredProcedures\sp_auditLog_end.sql" />
+    <Build Include="StoredProcedures\sp_auditLog_manual_clean.sql" />
+    <Build Include="StoredProcedures\sp_auditLog_procedure.sql" />
+    <Build Include="StoredProcedures\sp_auditLog_start.sql" />
+    <Build Include="StoredProcedures\sp_consolidated.sql" />
+    <Build Include="StoredProcedures\sp_elasticjob_errorlog.sql" />
+    <Build Include="StoredProcedures\sp_email_notifications.sql" />
+    <Build Include="StoredProcedures\sp_email_notifications_schedule.sql" />
+    <Build Include="StoredProcedures\sp_email_notifications_schedule_error_handling.sql" />
+    <Build Include="StoredProcedures\sp_email_notifications_schedule_timeout.sql" />
+    <Build Include="StoredProcedures\sp_email_notifications_sessions.sql" />
+    <Build Include="StoredProcedures\sp_email_sentTS.sql" />
+    <Build Include="StoredProcedures\sp_fabric.sql" />
+    <Build Include="StoredProcedures\sp_index_info.sql" />
+    <Build Include="StoredProcedures\sp_index_maintenance.sql" />
+    <Build Include="StoredProcedures\sp_index_optimization.sql" />
+    <Build Include="StoredProcedures\sp_index_optimization_queue.sql" />
+    <Build Include="StoredProcedures\sp_index_recovery.sql" />
+    <Build Include="StoredProcedures\sp_model_partition_month.sql" />
+    <Build Include="StoredProcedures\sp_nav_user_sessions.sql" />
+    <Build Include="StoredProcedures\sp_objects_change_control.sql" />
+    <Build Include="StoredProcedures\sp_pre_model_monitor_begin.sql" />
+    <Build Include="StoredProcedures\sp_pre_model_monitor_end.sql" />
+    <Build Include="StoredProcedures\sp_pre_model_monitor_status.sql" />
+    <Build Include="StoredProcedures\sp_procedure_schedule.sql" />
+    <Build Include="StoredProcedures\sp_procedure_schedule_errorLog.sql" />
+    <Build Include="StoredProcedures\sp_process_model_delay_register.sql" />
+    <Build Include="StoredProcedures\sp_process_model_errorCount.sql" />
+    <Build Include="StoredProcedures\sp_process_model_schedule.sql" />
+    <Build Include="StoredProcedures\sp_run_procedure_email.sql" />
+    <Build Include="StoredProcedures\sp_sales_archive_check_logistics_OrderQueues.sql" />
+    <Build Include="StoredProcedures\sp_sales_marketplace_partner_check.sql" />
+    <Build Include="StoredProcedures\sp_set_insight_permissions.sql" />
+    <Build Include="StoredProcedures\sp_start_job_remote.sql" />
+    <Build Include="StoredProcedures\sp_switch_procedures.sql" />
+    <Build Include="StoredProcedures\sp_tasks_overdue.sql" />
+    <Build Include="StoredProcedures\sp_team_notification_channels.sql" />
+    <Build Include="StoredProcedures\sp_team_notification_log.sql" />
+    <Build Include="StoredProcedures\sp_team_notification_log_posted.sql" />
+    <Build Include="StoredProcedures\sp_trigger_rebuild.sql" />
+    <Build Include="Tables\Company.sql" />
+    <Build Include="Tables\Lookup.sql" />
+    <Build Include="Tables\MSreplication_objects_collision.sql" />
+    <Build Include="Tables\MSreplication_subscriptions_monitor.sql" />
+    <Build Include="Tables\Users.sql" />
+    <Build Include="Tables\Users_changeLog.sql" />
+    <Build Include="Tables\auditLog.sql" />
+    <Build Include="Tables\auditLog_cleanups.sql" />
+    <Build Include="Tables\auditLog_dataFactory.sql" />
+    <Build Include="Tables\auditLog_jams.sql" />
+    <Build Include="Tables\auditLog_logicApp_identifier_local.sql" />
+    <Build Include="Tables\auditLog_logicApp_identifier_model.sql" />
+    <Build Include="Tables\auditLog_procedure_dependents.sql" />
+    <Build Include="Tables\auditLog_sessions.sql" />
+    <Build Include="Tables\auditLog_sql_session.sql" />
+    <Build Include="Tables\consolidated.sql" />
+    <Build Include="Tables\datetime_tracker.sql" />
+    <Build Include="Tables\elasticjob_errorlog.sql" />
+    <Build Include="Tables\email_notifications.sql" />
+    <Build Include="Tables\email_notifications_recipients.sql" />
+    <Build Include="Tables\email_notifications_schedule.sql" />
+    <Build Include="Tables\email_notifications_schedule_changeLog.sql" />
+    <Build Include="Tables\email_notifications_schedule_errorLog.sql" />
+    <Build Include="Tables\email_notifications_schedule_logicApp_identifier.sql" />
+    <Build Include="Tables\email_notifications_sessions.sql" />
+    <Build Include="Tables\entry_no_tracker.sql" />
+    <Build Include="Tables\fabric.sql" />
+    <Build Include="Tables\index_info.sql" />
+    <Build Include="Tables\index_info_changeLog.sql" />
+    <Build Include="Tables\index_optimization.sql" />
+    <Build Include="Tables\index_optimization_error.sql" />
+    <Build Include="Tables\index_optimization_queue.sql" />
+    <Build Include="Tables\infrastructure_types.sql" />
+    <Build Include="Tables\iteration.sql" />
+    <Build Include="Tables\model_partition_month_auditLog.sql" />
+    <Build Include="Tables\nav_user_sessions.sql" />
+    <Build Include="Tables\objects.sql" />
+    <Build Include="Tables\objects_change_control.sql" />
+    <Build Include="Tables\outcode.sql" />
+    <Build Include="Tables\pre_model_monitor_local.sql" />
+    <Build Include="Tables\procedure_dependents.sql" />
+    <Build Include="Tables\procedure_schedule.sql" />
+    <Build Include="Tables\procedure_schedule_changeLog.sql" />
+    <Build Include="Tables\procedure_schedule_errorLog.sql" />
+    <Build Include="Tables\procedure_schedule_eventDetail.sql" />
+    <Build Include="Tables\procedure_schedule_handler.sql" />
+    <Build Include="Tables\procedure_schedule_pairing.sql" />
+    <Build Include="Tables\procedure_schedule_queue.sql" />
+    <Build Include="Tables\process_model.sql" />
+    <Build Include="Tables\process_model_changeLog.sql" />
+    <Build Include="Tables\process_model_delay_register.sql" />
+    <Build Include="Tables\process_model_navAutoTask_pairing.sql" />
+    <Build Include="Tables\process_model_partitions.sql" />
+    <Build Include="Tables\process_model_partitions_changeLog.sql" />
+    <Build Include="Tables\process_model_partitions_procedure_pairing.sql" />
+    <Build Include="Tables\process_model_partitions_procedure_pairing_changeLog.sql" />
+    <Build Include="Tables\process_model_procedure_pairing.sql" />
+    <Build Include="Tables\process_model_script_log.sql" />
+    <Build Include="Tables\recreate_missing_indexes_log.sql" />
+    <Build Include="Tables\schedule_frequency_unit.sql" />
+    <Build Include="Tables\schemas.sql" />
+    <Build Include="Tables\tasks_overdue.sql" />
+    <Build Include="Tables\team_notification_auditLog.sql" />
+    <Build Include="Tables\team_notification_channels.sql" />
+    <Build Include="Tables\team_notification_log.sql" />
+    <Build Include="Tables\team_notification_log2.sql" />
+    <Build Include="Tables\team_notification_setup.sql" />
+    <Build Include="Tables\team_notification_setup_changeLog.sql" />
+    <Build Include="Tables\timestamp_tracker.sql" />
+    <Build Include="Tables\user_config.sql" />
+    <Build Include="UserDefinedTypes\ty_list_int.sql" />
+    <Build Include="Views\index_info_indexName.sql" />
+    <Build Include="Views\model_partition_bi.sql" />
+    <Build Include="Views\model_partition_expanding.sql" />
+    <Build Include="Views\model_partition_month.sql" />
+    <Build Include="Views\process_model_navAutoTask_status.sql" />
+    <Build Include="Views\process_model_script.sql" />
+    <Build Include="Views\timestamp.sql" />
+    <Build Include="Views\vw_MSreplication_monitordata.sql" />
+    <Build Include="Views\vw_auditLog.sql" />
+    <Build Include="Views\vw_auditLog_model_Marketing_SalesOrders_processTimes.sql" />
+    <Build Include="Views\vw_auditLog_monitor.sql" />
+    <Build Include="Views\vw_email_notifications.sql" />
+    <Build Include="Views\vw_index_info_missing.sql" />
+    <Build Include="Views\vw_procedure_schedule.sql" />
+    <Build Include="Views\vw_procedure_schedule_errorLog.sql" />
+    <Build Include="Views\vw_process_model.sql" />
+    <Build Include="Views\vw_team_notification_list.sql" />
+  </ItemGroup>
+  <Import Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" Condition="Exists('$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets')" />
+  <Import Project="$(SQLDBExtensionsSqlTasksPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" Condition="Exists('$(SQLDBExtensionsSqlTasksPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets')" />
+  <Import Project="$(VSSDK)\Microsoft.Data.Tools.Schema.SqlTasks.targets" Condition="Exists('$(VSSDK)\Microsoft.Data.Tools.Schema.SqlTasks.targets')" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')" />
+</Project>

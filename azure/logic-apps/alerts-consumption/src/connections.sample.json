@@ -1,0 +1,32 @@
+{
+  "sql-1": {
+    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/sql",
+    "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/sql-1",
+    "connectionName": "sql-1",
+    "connectionProperties": {
+      "authentication": {
+        "type": "ManagedServiceIdentity"
+      }
+    }
+  },
+  "teams_1": {
+    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/teams",
+    "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/teams-1",
+    "connectionName": "teams-1"
+  },
+  "teams": {
+    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/teams",
+    "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/teams",
+    "connectionName": "teams"
+  },
+  "sharepointonline-1": {
+    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/sharepointonline",
+    "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/sharepointonline-1",
+    "connectionName": "sharepointonline-1"
+  },
+  "office365": {
+    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Web/locations/westeurope/managedApis/office365",
+    "connectionId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-portfolio/providers/Microsoft.Web/connections/office365",
+    "connectionName": "office365"
+  }
+}

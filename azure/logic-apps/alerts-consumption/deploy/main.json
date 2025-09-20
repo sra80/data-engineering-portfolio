@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workflowName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Logic App"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "westeurope",
+      "metadata": {
+        "description": "Azure region for deployment"
+      }
+    },
+    "logicAppDefinition": {
+      "type": "object",
+      "metadata": {
+        "description": "The Logic App workflow definition (workflow.json)"
+      }
+    },
+    "connections": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "API connection references"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "[parameters('workflowName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "state": "Enabled",
+        "definition": "[parameters('logicAppDefinition')]",
+        "parameters": {
+          "$connections": {
+            "value": "[parameters('connections')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "logicAppName": {
+      "type": "string",
+      "value": "[parameters('workflowName')]"
+    }
+  }
+}
